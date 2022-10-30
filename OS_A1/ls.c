@@ -1,3 +1,8 @@
+/*********************************************************************************
+ * Name:        Pritish Wadhwa                                                   *
+ * Section:     B                                                                *
+ * Roll NUmber: 2019440                                                          *
+ ********************************************************************************/
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -9,163 +14,177 @@
 #include <pwd.h>
 #include <grp.h>
 
-#define S_IFMT _S_IFMT
+void printLs(char argument[1000])
+{
+    struct dirent **names;
+    int n;
+    if (strlen(argument) == 0)
+    {
+        n = scandir(".", &names, NULL, alphasort);
+    }
+    else
+    {
+        n = scandir(argument, &names, NULL, alphasort);
+    }
+    int i = 0;
+    if (n < 0)
+    {
+        perror("scandir");
+    }
+    else
+    {
+        while (i < n)
+        {
+            if (names[i]->d_name[0] == '.')
+            {
+                free(names[i++]);
+                continue;
+            }
+            printf("%s ", names[i]->d_name);
+            free(names[i++]);
+        }
+        printf("\n");
+        free(names);
+    }
+}
+
+void printLsA(char argument[1000])
+{
+    struct dirent **names;
+    int n;
+    if (strlen(argument) == 0)
+    {
+        n = scandir(".", &names, NULL, alphasort);
+    }
+    else
+    {
+        n = scandir(argument, &names, NULL, alphasort);
+    }
+    int i = 0;
+    if (n < 0)
+    {
+        perror("scandir");
+    }
+    else
+    {
+        while (i < n)
+        {
+            printf("%s ", names[i]->d_name);
+            free(names[i++]);
+        }
+        printf("\n");
+        free(names);
+    }
+}
+
+void printLsL(char argument[1000])
+{
+    DIR *thedirectory;
+    struct dirent *thefile;
+    struct stat thestat;
+    struct passwd *tf;
+    struct group *gf;
+    char buf[512];
+    if (strlen(argument) == 0)
+    {
+        argument = ".";
+    }
+    thedirectory = opendir(argument);
+    while ((thefile = readdir(thedirectory)) != NULL)
+    {
+        if (thefile->d_name[0] == '.')
+        {
+            continue;
+        }
+        sprintf(buf, "%s/%s", argument, thefile->d_name);
+        stat(buf, &thestat);
+        switch (thestat.st_mode & S_IFMT)
+        {
+        case S_IFBLK:
+            printf("b");
+            break;
+        case S_IFCHR:
+            printf("c");
+            break;
+        case S_IFDIR:
+            printf("d");
+            break;
+        case S_IFIFO:
+            printf("p");
+            break;
+        case S_IFLNK:
+            printf("l");
+            break;
+        case S_IFSOCK:
+            printf("s");
+            break;
+        default:
+            printf("-");
+            break;
+        }
+        printf((thestat.st_mode & S_IRUSR) ? "r" : "-");
+        printf((thestat.st_mode & S_IWUSR) ? "w" : "-");
+        printf((thestat.st_mode & S_IXUSR) ? "x" : "-");
+        printf((thestat.st_mode & S_IRGRP) ? "r" : "-");
+        printf((thestat.st_mode & S_IWGRP) ? "w" : "-");
+        printf((thestat.st_mode & S_IXGRP) ? "x" : "-");
+        printf((thestat.st_mode & S_IROTH) ? "r" : "-");
+        printf((thestat.st_mode & S_IWOTH) ? "w" : "-");
+        printf((thestat.st_mode & S_IXOTH) ? "x" : "-");
+        printf(" %ld", thestat.st_nlink);
+        tf = getpwuid(thestat.st_uid);
+        printf(" %s", tf->pw_name);
+        gf = getgrgid(thestat.st_gid);
+        printf(" %s", gf->gr_name);
+        printf(" %zu", thestat.st_size);
+        printf(" %s", thefile->d_name);
+        printf(" %s", ctime(&thestat.st_mtime));
+    }
+    closedir(thedirectory);
+}
 
 int main(int argc, char *argv[])
 {
-    char cmdName[10] = "";
+    char commandName[10] = "";
     char flag[10] = "";
-    char argue[1000] = "";
+    char argument[1000] = "";
     if (argc > 1)
     {
-        char *tkn;
-        tkn = strtok(argv[1], " ");
-        strcpy(cmdName, tkn);
-        tkn = strtok(NULL, " ");
-        if (tkn != NULL)
+        char *token = strtok(argv[1], " ");
+        strcpy(commandName, token);
+        token = strtok(NULL, " ");
+        if (token != NULL)
         {
-            if (tkn[0] == '-')
+            if (token[0] == '-')
             {
-                strcpy(flag, tkn);
-                tkn = strtok(NULL, " ");
-                if (tkn != NULL)
+                strcpy(flag, token);
+                token = strtok(NULL, " ");
+                if (token != NULL)
                 {
-                    strcpy(argue, tkn);
+                    strcpy(argument, token);
                 }
             }
             else
             {
-                strcpy(argue, tkn);
+                strcpy(argument, token);
             }
         }
     }
     if (flag[0] == '\0')
     {
-        struct dirent **nameDir;
-        int n;
-        if (strlen(argue) == 0)
-        {
-            n = scandir(".", &nameDir, NULL, alphasort);
-        }
-        else
-        {
-            n = scandir(argue, &nameDir, NULL, alphasort);
-        }
-        if (n < 0)
-        {
-            perror("Error: scandir");
-        }
-        else
-        {
-            while (int i < n)
-            {
-                if (nameDir[i]->d_name[0] == '.')
-                {
-                    free(nameDir[i++]);
-                    continue;
-                }
-                printf("%s ", nameDir[i]->d_name);
-                free(nameDir[i++]);
-            }
-            printf("\n");
-            free(nameDir);
-        }
+        printLs(argument);
     }
     else if (flag[1] == 'a')
     {
-        struct dirent **nameDir;
-        int n;
-        if (strlen(argue) == 0)
-        {
-            n = scandir(".", &nameDir, NULL, alphasort);
-        }
-        else
-        {
-            n = scandir(argue, &nameDir, NULL, alphasort);
-        }
-        if (n < 0)
-        {
-            perror("scandir");
-        }
-        else
-        {
-            while (int i < n)
-            {
-                printf("%s ", nameDir[i]->d_name);
-                free(nameDir[i++]);
-            }
-            printf("\n");
-            free(nameDir);
-        }
+        printLsA(argument);
     }
     else if (flag[1] == 'l')
     {
-        DIR *directory;
-        struct dirent *myfile;
-        struct stat mystat;
-        struct passwd *password;
-        struct group *groups;
-        char arr[512];
-        if (strlen(argue) == 0)
-        {
-            argue = ".";
-        }
-        directory = opendir(argue);
-        while ((myfile = readdir(directory)))
-        {
-            if (myfile->d_name[0] == '.')
-            {
-                continue;
-            }
-            sprintf(arr, "%s/%s", argue, myfile->d_name);
-            mystat(arr, &mystat);
-            switch (mystat.st_mode & S_IFMT)
-            {
-            case S_IFBLK:
-                printf("b");
-                break;
-            case S_IFCHR:
-                printf("c");
-                break;
-            case S_IFDIR:
-                printf("d");
-                break;
-            case S_IFIFO:
-                printf("p");
-                break;
-            case S_IFLNK:
-                printf("l");
-                break;
-            case S_IFSOCK:
-                printf("s");
-                break;
-            default:
-                printf("-");
-                break;
-            }
-            printf((mystat.st_mode & S_IRUSR) ? "r" : "-");
-            printf((mystat.st_mode & S_IWUSR) ? "w" : "-");
-            printf((mystat.st_mode & S_IXUSR) ? "x" : "-");
-            printf((mystat.st_mode & S_IRGRP) ? "r" : "-");
-            printf((mystat.st_mode & S_IWGRP) ? "w" : "-");
-            printf((mystat.st_mode & S_IXGRP) ? "x" : "-");
-            printf((mystat.st_mode & S_IROTH) ? "r" : "-");
-            printf((mystat.st_mode & S_IWOTH) ? "w" : "-");
-            printf((mystat.st_mode & S_IXOTH) ? "x" : "-");
-            printf(" %ld", mystat.st_nlink);
-            password = getpwuid(mystat.st_uid);
-            printf(" %s", password->pw_name);
-            groups = getgrgid(mystat.st_gid);
-            printf(" %s", groups->gr_name);
-            printf(" %zu", mystat.st_size);
-            printf(" %s", myfile->d_name);
-            printf(" %s", ctime(&mystat.st_mtime));
-        }
-        closedir(directory);
+        printLsL(argument);
     }
     else
     {
-        printf("Invalid Input ---> %s\n", flag);
+        printf("Invalid Input -- %s\n", flag);
         return 1;
     }
     return 0;
