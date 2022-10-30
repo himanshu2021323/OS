@@ -316,9 +316,8 @@ void pwd(char **input_array)
 int main()
 {
     printf("\e[1;1H\e[2J");
-    printf(BLU "*******************************Welcome To My SHELL***********************************\n\n\n\n" RESET);
-    printf(BLU "Available commands:" RESET
-            YEL "\n\tcd, pwd, history, echo, ls, cat, date, mkdir, rm, exit\n\n" RESET);
+    printf("\n\n\n\n*******************************Welcome To My SHELL***********************************\n\n\n\n");
+    printf("Available commands:\n\tcd, pwd, history, echo, ls, cat, date, mkdir, rm, exit\n\n");
     char cwd[100];
     while (1)
     {
