@@ -7,7 +7,7 @@
 #include <errno.h>
 #include <sys/wait.h>
 
-char cmds[10][10] = {"cd", "echo", "pwd", "ls", "cat", "date", "rm", "mkdir"};
+char cmds[10][10] = {"cd", "echo", "pwd", "ls", "cat", "date", "rm", "mkdir", "exit"};
 int nxt;
 static int count = 0;
 
