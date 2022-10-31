@@ -14,6 +14,12 @@ int main(int argc, char *argv[])
     char commandName[10] = "";
     char flag[10] = "";
     char argument[1000] = "";
+    DIR *thedirectory;
+    struct dirent *thefile;
+    struct stat thestat;
+    struct passwd *tf;
+    struct group *gf;
+    char buf[512];
     if (argc > 1)
     {
         char *token = strtok(argv[1], " ");
@@ -99,15 +105,9 @@ int main(int argc, char *argv[])
     }
     else if (flag[1] == 'l')
     {
-        DIR *thedirectory;
-        struct dirent *thefile;
-        struct stat thestat;
-        struct passwd *tf;
-        struct group *gf;
-        char buf[512];
         if (strlen(argument) == 0)
         {
-            argument = ".";
+            argument[1000] = ".";
         }
         thedirectory = opendir(argument);
         while ((thefile = readdir(thedirectory)) != NULL)
