@@ -291,10 +291,10 @@ void pwd(char **array_in)
 
 int main()
 {
-    printf("****************************************************************************\n\n\n\n");
+    printf("\n\n\n\n****************************************************************************\n\n\n\n");
     printf("\t\t\t Welcome To My Shell");
-    printf("****************************************************************************\n\n\n\n");
-    printf("Available commands:\n\tcd, pwd, history, echo, ls, cat, date, mkdir, rm, exit\n\n");
+    printf("\n\n\n\n****************************************************************************\n\n\n\n");
+    printf("Available commands:\n\t cd, pwd, echo, ls, cat, date, mkdir, rm \n\n");
     char cmd[100];
     while (1)
     {
@@ -372,12 +372,6 @@ int main()
             }
             else if (function == 3)
             {
-                printf("[PROCESS COMPLETED]\n");
-                break;
-            }
-
-            else if (function == 4)
-            {
                 pid_t id;
                 int stat;
                 if ((id = fork()) == 0)
@@ -392,7 +386,7 @@ int main()
                     time = wait(&stat);
                 }
             }
-            else if (function == 5)
+            else if (function == 4)
             {
                 pid_t id;
                 int stat;
@@ -408,7 +402,7 @@ int main()
                     time = wait(&stat);
                 }
             }
-            else if (function == 6)
+            else if (function == 5)
             {
                 pid_t id;
 
@@ -425,7 +419,7 @@ int main()
                     time = wait(&stat);
                 }
             }
-            else if (function == 7)
+            else if (function == 6)
             {
                 pid_t id;
                 int stat;
@@ -441,7 +435,7 @@ int main()
                     time = wait(&stat);
                 }
             }
-            else if (function == 8)
+            else if (function == 7)
             {
                 pid_t id;
                 int stat;
@@ -457,6 +451,11 @@ int main()
                     pid_t time;
                     time = wait(&stat);
                 }
+            }
+            else if (function == 8)
+            {
+                printf("[PROCESS COMPLETED]\n");
+                break;
             }
             else
             {
