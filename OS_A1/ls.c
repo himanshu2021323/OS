@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
         struct stat thestat;
         struct passwd *password;
         struct group *groups;
-        char arr[512];
+        char buf[512];
         if (strlen(arg) == 0)
         {
             arg[1000] = ".";
@@ -119,8 +119,8 @@ int main(int argc, char *argv[])
             {
                 continue;
             }
-            sprintf(arr, "%s/%s", arg, file->d_name);
-            stat(arr, &thestat);
+            sprintf(buf, "%s/%s", arg, file->d_name);
+            stat(buf, &thestat);
             switch (thestat.st_mode & S_IFMT)
             {
             case S_IFBLK:
