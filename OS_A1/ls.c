@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
     else if (flag[1] == 'l')
     {
         // ls -l command
-        DIR *directory;
+        DIR *thedirectory;
         struct dirent *file;
         struct stat thestat;
         struct passwd *password;
@@ -112,8 +112,8 @@ int main(int argc, char *argv[])
         {
             arg[1000] = ".";
         }
-        directory = opendir(arg);
-        while ((file = readdir(directory)))
+        thedirectory = opendir(arg);
+        while ((file = readdir(thedirectory)))
         {
             if (file->d_name[0] == '.')
             {
@@ -163,7 +163,7 @@ int main(int argc, char *argv[])
             printf(" %s", file->d_name);
             printf(" %s", ctime(&thestat.st_mtime));
         }
-        closedir(directory);
+        closedir(thedirectory);
     }
     else
     {
