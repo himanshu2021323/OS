@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
 {
     char cmd[10] = "";
     char flag[10] = "";
-    char argument[1000] = "";
+    char arg[1000] = "";
     if (argc > 1)
     {
         char *tkn = strtok(argv[1], " ");
@@ -27,12 +27,12 @@ int main(int argc, char *argv[])
                 tkn = strtok(NULL, " ");
                 if (tkn != NULL)
                 {
-                    strcpy(argument, tkn);
+                    strcpy(arg, tkn);
                 }
             }
             else
             {
-                strcpy(argument, tkn);
+                strcpy(arg, tkn);
             }
         }
     }
@@ -42,13 +42,13 @@ int main(int argc, char *argv[])
         struct dirent **fileName;
         int n;
         int i = 0;
-        if (strlen(argument) == 0)
+        if (strlen(arg) == 0)
         {
             n = scandir(".", &fileName, NULL, alphasort);
         }
         else
         {
-            n = scandir(argument, &fileName, NULL, alphasort);
+            n = scandir(arg, &fileName, NULL, alphasort);
         }
         if (n < 0)
         {
@@ -76,13 +76,13 @@ int main(int argc, char *argv[])
         struct dirent **fileName;
         int n;
         int i = 0;
-        if (strlen(argument) == 0)
+        if (strlen(arg) == 0)
         {
             n = scandir(".", &fileName, NULL, alphasort);
         }
         else
         {
-            n = scandir(argument, &fileName, NULL, alphasort);
+            n = scandir(arg, &fileName, NULL, alphasort);
         }
         if (n < 0)
         {
@@ -102,25 +102,25 @@ int main(int argc, char *argv[])
     else if (flag[1] == 'l')
     {
         // ls -l command
-        DIR *thedirectory;
-        struct dirent *thefile;
+        DIR *directory;
+        struct dirent *file;
         struct stat thestat;
-        struct passwd *tf;
-        struct group *gf;
-        char buf[512];
-        if (strlen(argument) == 0)
+        struct passwd *password;
+        struct group *groups;
+        char arr[512];
+        if (strlen(arg) == 0)
         {
-            argument[1000] = ".";
+            arg[1000] = ".";
         }
-        thedirectory = opendir(argument);
-        while ((thefile = readdir(thedirectory)) != NULL)
+        directory = opendir(arg);
+        while ((file = readdir(directory)))
         {
-            if (thefile->d_name[0] == '.')
+            if (file->d_name[0] == '.')
             {
                 continue;
             }
-            sprintf(buf, "%s/%s", argument, thefile->d_name);
-            stat(buf, &thestat);
+            sprintf(arr, "%s/%s", arg, file->d_name);
+            stat(arr, &thestat);
             switch (thestat.st_mode & S_IFMT)
             {
             case S_IFBLK:
@@ -155,15 +155,15 @@ int main(int argc, char *argv[])
             printf((thestat.st_mode & S_IWOTH) ? "w" : "-");
             printf((thestat.st_mode & S_IXOTH) ? "x" : "-");
             printf(" %ld", thestat.st_nlink);
-            tf = getpwuid(thestat.st_uid);
-            printf(" %s", tf->pw_name);
-            gf = getgrgid(thestat.st_gid);
-            printf(" %s", gf->gr_name);
+            password = getpwuid(thestat.st_uid);
+            printf(" %s", password->pw_name);
+            groups = getgrgid(thestat.st_gid);
+            printf(" %s", groups->gr_name);
             printf(" %zu", thestat.st_size);
-            printf(" %s", thefile->d_name);
+            printf(" %s", file->d_name);
             printf(" %s", ctime(&thestat.st_mtime));
         }
-        closedir(thedirectory);
+        closedir(directory);
     }
     else
     {
