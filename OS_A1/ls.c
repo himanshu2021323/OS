@@ -11,45 +11,44 @@
 
 int main(int argc, char *argv[])
 {
-    char cmd[10] = "";
+    char commandName[10] = "";
     char flag[10] = "";
     char argument[1000] = "";
     if (argc > 1)
     {
-        char *tkn = strtok(argv[1], " ");
-        strcpy(cmd, tkn);
-        tkn = strtok(NULL, " ");
-        if (tkn != NULL)
+        char *token = strtok(argv[1], " ");
+        strcpy(commandName, token);
+        token = strtok(NULL, " ");
+        if (token != NULL)
         {
-            if (tkn[0] == '-')
+            if (token[0] == '-')
             {
-                strcpy(flag, tkn);
-                tkn = strtok(NULL, " ");
-                if (tkn != NULL)
+                strcpy(flag, token);
+                token = strtok(NULL, " ");
+                if (token != NULL)
                 {
-                    strcpy(argument, tkn);
+                    strcpy(argument, token);
                 }
             }
             else
             {
-                strcpy(argument, tkn);
+                strcpy(argument, token);
             }
         }
     }
     if (flag[0] == '\0')
     {
-        // ls command
-        struct dirent **fileName;
+        struct dirent **names;
         int n;
-        int i = 0;
         if (strlen(argument) == 0)
         {
-            n = scandir(".", &fileName, NULL, alphasort);
+            n = scandir(".", &names, NULL, alphasort);
         }
         else
         {
-            n = scandir(argument, &fileName, NULL, alphasort);
+            n = scandir(argument, &names, NULL, alphasort);
         }
+        int i = 0;
         if (n < 0)
         {
             perror("scandir");
@@ -58,32 +57,31 @@ int main(int argc, char *argv[])
         {
             while (i < n)
             {
-                if (fileName[i]->d_name[0] == '.')
+                if (names[i]->d_name[0] == '.')
                 {
-                    free(fileName[i++]);
+                    free(names[i++]);
                     continue;
                 }
-                printf("%s ", fileName[i]->d_name);
-                free(fileName[i++]);
+                printf("%s ", names[i]->d_name);
+                free(names[i++]);
             }
             printf("\n");
-            free(fileName);
+            free(names);
         }
     }
     else if (flag[1] == 'a')
     {
-        // ls -a command
-        struct dirent **fileName;
+        struct dirent **names;
         int n;
-        int i = 0;
         if (strlen(argument) == 0)
         {
-            n = scandir(".", &fileName, NULL, alphasort);
+            n = scandir(".", &names, NULL, alphasort);
         }
         else
         {
-            n = scandir(argument, &fileName, NULL, alphasort);
+            n = scandir(argument, &names, NULL, alphasort);
         }
+        int i = 0;
         if (n < 0)
         {
             perror("scandir");
@@ -92,16 +90,15 @@ int main(int argc, char *argv[])
         {
             while (i < n)
             {
-                printf("%s ", fileName[i]->d_name);
-                free(fileName[i++]);
+                printf("%s ", names[i]->d_name);
+                free(names[i++]);
             }
             printf("\n");
-            free(fileName);
+            free(names);
         }
     }
     else if (flag[1] == 'l')
     {
-        // ls -l command
         DIR *thedirectory;
         struct dirent *thefile;
         struct stat thestat;
@@ -167,7 +164,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        printf("Invalid Input ---> %s\n", flag);
+        printf("Invalid Input -- %s\n", flag);
         return 1;
     }
     return 0;
