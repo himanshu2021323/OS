@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
 {
     char cmd[10] = "";
     char flag[10] = "";
-    char arg[1000] = "";
+    char argument[1000] = "";
     if (argc > 1)
     {
         char *tkn = strtok(argv[1], " ");
@@ -27,12 +27,12 @@ int main(int argc, char *argv[])
                 tkn = strtok(NULL, " ");
                 if (tkn != NULL)
                 {
-                    strcpy(arg, tkn);
+                    strcpy(argument, tkn);
                 }
             }
             else
             {
-                strcpy(arg, tkn);
+                strcpy(argument, tkn);
             }
         }
     }
@@ -42,13 +42,13 @@ int main(int argc, char *argv[])
         struct dirent **fileName;
         int n;
         int i = 0;
-        if (strlen(arg) == 0)
+        if (strlen(argument) == 0)
         {
             n = scandir(".", &fileName, NULL, alphasort);
         }
         else
         {
-            n = scandir(arg, &fileName, NULL, alphasort);
+            n = scandir(argument, &fileName, NULL, alphasort);
         }
         if (n < 0)
         {
@@ -76,13 +76,13 @@ int main(int argc, char *argv[])
         struct dirent **fileName;
         int n;
         int i = 0;
-        if (strlen(arg) == 0)
+        if (strlen(argument) == 0)
         {
             n = scandir(".", &fileName, NULL, alphasort);
         }
         else
         {
-            n = scandir(arg, &fileName, NULL, alphasort);
+            n = scandir(argument, &fileName, NULL, alphasort);
         }
         if (n < 0)
         {
@@ -108,9 +108,9 @@ int main(int argc, char *argv[])
         struct passwd *tf;
         struct group *gf;
         char buf[512];
-        if (strlen(arg) == 0)
+        if (strlen(argument) == 0)
         {
-            arg[1000] = ".";
+            argument[1000] = ".";
         }
         thedirectory = opendir(argument);
         while ((thefile = readdir(thedirectory)) != NULL)
