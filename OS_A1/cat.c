@@ -5,8 +5,6 @@
 #include <fcntl.h>
 #include <errno.h>
 
-#define O_RDONLY _O_RDONLY
-
 int main(int argc, char *argv[])
 {
     char cmdName[10] = "", flag[10] = "", fileName[1000] = "", *tkn = strtok(argv[1], " ");
