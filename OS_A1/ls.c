@@ -9,70 +9,8 @@
 #include <pwd.h>
 #include <grp.h>
 
-void printLs(char argument[1000])
-{
-    struct dirent **names;
-    int n;
-    if (strlen(argument) == 0)
-    {
-        n = scandir(".", &names, NULL, alphasort);
-    }
-    else
-    {
-        n = scandir(argument, &names, NULL, alphasort);
-    }
-    int i = 0;
-    if (n < 0)
-    {
-        perror("scandir");
-    }
-    else
-    {
-        while (i < n)
-        {
-            if (names[i]->d_name[0] == '.')
-            {
-                free(names[i++]);
-                continue;
-            }
-            printf("%s ", names[i]->d_name);
-            free(names[i++]);
-        }
-        printf("\n");
-        free(names);
-    }
-}
 
-void printLsA(char argument[1000])
-{
-    struct dirent **names;
-    int n;
-    if (strlen(argument) == 0)
-    {
-        n = scandir(".", &names, NULL, alphasort);
-    }
-    else
-    {
-        n = scandir(argument, &names, NULL, alphasort);
-    }
-    int i = 0;
-    if (n < 0)
-    {
-        perror("scandir");
-    }
-    else
-    {
-        while (i < n)
-        {
-            printf("%s ", names[i]->d_name);
-            free(names[i++]);
-        }
-        printf("\n");
-        free(names);
-    }
-}
-
-void printLsL(char argument[1000])
+void LsL(char argument[1000])
 {
     DIR *thedirectory;
     struct dirent *thefile;
@@ -82,7 +20,7 @@ void printLsL(char argument[1000])
     char buf[512];
     if (strlen(argument) == 0)
     {
-        argument[1000] = ".";
+        argument = ".";
     }
     thedirectory = opendir(argument);
     while ((thefile = readdir(thedirectory)) != NULL)
@@ -167,11 +105,64 @@ int main(int argc, char *argv[])
     }
     if (flag[0] == '\0')
     {
-        printLs(argument);
+        struct dirent **names;
+        int n;
+        if (strlen(argument) == 0)
+        {
+            n = scandir(".", &names, NULL, alphasort);
+        }
+        else
+        {
+            n = scandir(argument, &names, NULL, alphasort);
+        }
+        int i = 0;
+        if (n < 0)
+        {
+            perror("scandir");
+        }
+        else
+        {
+            while (i < n)
+            {
+                if (names[i]->d_name[0] == '.')
+                {
+                    free(names[i++]);
+                    continue;
+                }
+                printf("%s ", names[i]->d_name);
+                free(names[i++]);
+            }
+            printf("\n");
+            free(names);
+        }
     }
     else if (flag[1] == 'a')
     {
-        printLsA(argument);
+        struct dirent **names;
+        int n;
+        if (strlen(argument) == 0)
+        {
+            n = scandir(".", &names, NULL, alphasort);
+        }
+        else
+        {
+            n = scandir(argument, &names, NULL, alphasort);
+        }
+        int i = 0;
+        if (n < 0)
+        {
+            perror("scandir");
+        }
+        else
+        {
+            while (i < n)
+            {
+                printf("%s ", names[i]->d_name);
+                free(names[i++]);
+            }
+            printf("\n");
+            free(names);
+        }
     }
     else if (flag[1] == 'l')
     {
