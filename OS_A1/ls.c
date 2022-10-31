@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
     {
         // ls -l command
         DIR *thedirectory;
-        struct dirent *file;
+        struct dirent *thefile;
         struct stat thestat;
         struct passwd *password;
         struct group *groups;
@@ -113,13 +113,13 @@ int main(int argc, char *argv[])
             arg[1000] = ".";
         }
         thedirectory = opendir(arg);
-        while ((file = readdir(thedirectory)))
+        while ((thefile = readdir(thedirectory)))
         {
-            if (file->d_name[0] == '.')
+            if (thefile->d_name[0] == '.')
             {
                 continue;
             }
-            sprintf(buf, "%s/%s", arg, file->d_name);
+            sprintf(buf, "%s/%s", arg, thefile->d_name);
             stat(buf, &thestat);
             switch (thestat.st_mode & S_IFMT)
             {
@@ -160,7 +160,7 @@ int main(int argc, char *argv[])
             groups = getgrgid(thestat.st_gid);
             printf(" %s", groups->gr_name);
             printf(" %zu", thestat.st_size);
-            printf(" %s", file->d_name);
+            printf(" %s", thefile->d_name);
             printf(" %s", ctime(&thestat.st_mtime));
         }
         closedir(thedirectory);
