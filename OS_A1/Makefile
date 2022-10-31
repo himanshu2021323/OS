@@ -6,3 +6,11 @@ all:
 	gcc mkdir.c -o mkdir
 	gcc shell.c -o shell
 	./shell
+
+clean:
+	rm ls
+	rm date
+	rm cat
+	rm rm
+	rm mkdir
+	rm shell
