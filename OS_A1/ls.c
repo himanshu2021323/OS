@@ -23,8 +23,7 @@ void LsL(char arg[1000])
         arg = ".";
     }
     directory = opendir(arg);
-    file = readdir(directory);
-    while (file)
+    while ((file = readdir(directory)) != NULL)
     {
         if (file->d_name[0] == '.')
         {
