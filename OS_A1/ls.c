@@ -105,21 +105,21 @@ int main(int argc, char *argv[])
         DIR *thedirectory;
         struct dirent *thefile;
         struct stat thestat;
-        struct passwd *password;
-        struct group *groups;
+        struct passwd *tf;
+        struct group *gf;
         char buf[512];
         if (strlen(arg) == 0)
         {
             arg[1000] = ".";
         }
-        thedirectory = opendir(arg);
-        while ((thefile = readdir(thedirectory)))
+        thedirectory = opendir(argument);
+        while ((thefile = readdir(thedirectory)) != NULL)
         {
             if (thefile->d_name[0] == '.')
             {
                 continue;
             }
-            sprintf(buf, "%s/%s", arg, thefile->d_name);
+            sprintf(buf, "%s/%s", argument, thefile->d_name);
             stat(buf, &thestat);
             switch (thestat.st_mode & S_IFMT)
             {
@@ -155,10 +155,10 @@ int main(int argc, char *argv[])
             printf((thestat.st_mode & S_IWOTH) ? "w" : "-");
             printf((thestat.st_mode & S_IXOTH) ? "x" : "-");
             printf(" %ld", thestat.st_nlink);
-            password = getpwuid(thestat.st_uid);
-            printf(" %s", password->pw_name);
-            groups = getgrgid(thestat.st_gid);
-            printf(" %s", groups->gr_name);
+            tf = getpwuid(thestat.st_uid);
+            printf(" %s", tf->pw_name);
+            gf = getgrgid(thestat.st_gid);
+            printf(" %s", gf->gr_name);
             printf(" %zu", thestat.st_size);
             printf(" %s", thefile->d_name);
             printf(" %s", ctime(&thestat.st_mtime));
