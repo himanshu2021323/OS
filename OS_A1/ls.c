@@ -110,7 +110,7 @@ int main(int argc, char *argv[])
         char buf[512];
         if (strlen(argument) == 0)
         {
-            argument = ".";
+            argument[1000] = ".";
         }
         thedirectory = opendir(argument);
         while ((thefile = readdir(thedirectory)) != NULL)
