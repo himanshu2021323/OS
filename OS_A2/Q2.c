@@ -40,6 +40,5 @@ int main(int argc, char const *argv[])
                 {
                         printf("%f ", arr2[i][j]);
                 }printf("\n");
-        }
-        
+        }
 }
