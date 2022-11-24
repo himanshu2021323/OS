@@ -1,4 +1,3 @@
 #!/bin/bash
-cd /usr/src/linux-4.4.4
-make oldconfig
-make -j4
+cd /home/himanshu21323/build/linux-5.19.8
+make -j$(nproc)
