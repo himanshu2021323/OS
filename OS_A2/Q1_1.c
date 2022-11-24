@@ -4,7 +4,7 @@
 #include <sys/time.h>
 #include <pthread.h>
 
-#define count 4294967296
+#define count 1000
 
 int A, B, C;
 
