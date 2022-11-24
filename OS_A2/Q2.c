@@ -2,7 +2,7 @@
 #include <sys/syscall.h>
 #include <unistd.h>
 
-#define sys_kernel_2d_memcpy 448
+#define sys_kernel_2d_memcpy 451
 
 int main(int argc, char const *argv[])
 {
@@ -12,7 +12,7 @@ int main(int argc, char const *argv[])
         {
                 for (int j = 0; j < 4; j++)
                 {
-                        arr[i][j]=c++;
+                        real_arr[i][j]=c++;
                 }
         }
         printf("Real Array: ");
@@ -21,7 +21,7 @@ int main(int argc, char const *argv[])
         {
                 for (int j = 0; j < 4; j++)
                 {
-                        printf("%f ", arr[i][j]);
+                        printf("%f ", real_arr[i][j]);
                 }
                 printf("\n");
         }
