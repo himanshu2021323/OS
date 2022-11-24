@@ -19,9 +19,7 @@ int main()
         int status;
         waitpid(pid1, &status, 0);
         clock_gettime(CLOCK_REALTIME, &finish1);
-        double time = finish1.tv_sec - start1.tv_sec;
-        time += (finish1.tv_nsec - start1.tv_nsec) / 1000000000.0;
-        printf("Time taken to compile the Linux kernel: %lf seconds\n", time);
+        
         struct timespec start2, finish2;
         clock_gettime(CLOCK_REALTIME, &start2);
         pid2 = fork();
@@ -33,9 +31,7 @@ int main()
             int status2;
             waitpid(pid2, &status2, 0);
             clock_gettime(CLOCK_REALTIME, &finish2);
-            double time = finish2.tv_sec - start2.tv_sec;
-            time += (finish2.tv_nsec - start2.tv_nsec) / 1000000000.0;
-            printf("Time taken to compile the Linux kernel: %lf seconds\n", time);
+           
             struct timespec start3, finish3;
             clock_gettime(CLOCK_REALTIME, &start3);
             pid3 = fork();
@@ -47,6 +43,15 @@ int main()
                 int status3;
                 waitpid(pid3, &status3, 0);
                 clock_gettime(CLOCK_REALTIME, &finish3);
+
+                double time = finish1.tv_sec - start1.tv_sec;
+                time += (finish1.tv_nsec - start1.tv_nsec) / 1000000000.0;
+                printf("Time taken to compile the Linux kernel: %lf seconds\n", time);
+
+                double time = finish2.tv_sec - start2.tv_sec;
+                time += (finish2.tv_nsec - start2.tv_nsec) / 1000000000.0;
+                printf("Time taken to compile the Linux kernel: %lf seconds\n", time);
+
                 double time = finish3.tv_sec - start3.tv_sec;
                 time += (finish3.tv_nsec - start3.tv_nsec) / 1000000000.0;
                 printf("Time taken to compile the Linux kernel: %lf seconds\n", time);
