@@ -23,7 +23,7 @@ int main()
         struct timespec start2, finish2;
         clock_gettime(CLOCK_REALTIME, &start2);
         pid2 = fork();
-        if(pid2 == 1)
+        if(pid2 == 0)
         {
             execl("/bin/sh", "sh", "script2.sh", (char *)NULL);
         }
@@ -35,7 +35,7 @@ int main()
             struct timespec start3, finish3;
             clock_gettime(CLOCK_REALTIME, &start3);
             pid3 = fork();
-            if (pid3 == 2)
+            if (pid3 == 0)
             {
                 execl("/bin/sh", "sh", "script3.sh", (char *)NULL);
             }
@@ -44,15 +44,15 @@ int main()
                 waitpid(pid3, &status3, 0);
                 clock_gettime(CLOCK_REALTIME, &finish3);
                 
-                double time = finish1.tv_sec - start1.tv_sec;
-                time += (finish1.tv_nsec - start1.tv_nsec) / 1000000000.0;
-                printf("Time taken to compile the Linux kernel: %lf seconds\n", time);
-                double time = finish2.tv_sec - start2.tv_sec;
-                time += (finish2.tv_nsec - start2.tv_nsec) / 1000000000.0;
-                printf("Time taken to compile the Linux kernel: %lf seconds\n", time);
-                double time = finish3.tv_sec - start3.tv_sec;
-                time += (finish3.tv_nsec - start3.tv_nsec) / 1000000000.0;
-                printf("Time taken to compile the Linux kernel: %lf seconds\n", time);
+                double time1 = finish1.tv_sec - start1.tv_sec;
+                time1 += (finish1.tv_nsec - start1.tv_nsec) / 1000000000.0;
+                printf("Time taken to compile the Linux kernel: %lf seconds\n", time1);
+                double time2 = finish2.tv_sec - start2.tv_sec;
+                time2 += (finish2.tv_nsec - start2.tv_nsec) / 1000000000.0;
+                printf("Time taken to compile the Linux kernel: %lf seconds\n", time2);
+                double time3 = finish3.tv_sec - start3.tv_sec;
+                time3 += (finish3.tv_nsec - start3.tv_nsec) / 1000000000.0;
+                printf("Time taken to compile the Linux kernel: %lf seconds\n", time3);
 
             }
         }
