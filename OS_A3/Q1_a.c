@@ -15,10 +15,10 @@ int main()
     n = 5;
     for (i = 0; i < n; i++)
     {
-        sprintf(semname,”% d”, getpid() + i);
+        sprintf(semname,"% d", getpid() + i);
         sem[i] = sem_open(semname, O_CREAT | O_EXCL, 0666, 1);
         if (sem[i] == SEM_FAILED)
-            perror(“Unable to create semaphore”);
+            perror("Unable to create semaphore");
     }
 
     for (i = 0; i < n; i++)
@@ -38,7 +38,7 @@ int main()
         for (i = 0; i < n; i++)
         {
             sem_close(sem[i]);
-            sprintf(semname,”% d”, getpid() + i);
+            sprintf(semname,"% d", getpid() + i);
             sem_unlink(semname);
         }
     }
@@ -47,7 +47,7 @@ int main()
 }
 int reader(int val)
 {
-    printf(“% d Thinking\n”, val + 1);
+    printf("% d Thinking\n", val + 1);
     while (1)
     {
         sem_wait(sem[val % n]);
@@ -56,9 +56,9 @@ int reader(int val)
         else
             sem_post(sem[val % n]);
     }
-    printf(“% d Eating\n”, val + 1);
+    printf("% d Eating\n", val + 1);
     sleep(2);
     sem_post(sem[val % n]);
     sem_post(sem[(val + 1) % n]);
-    printf(“% d Finished Eating\n”, val + 1);
+    printf("% d Finished Eating\n", val + 1);
 }
