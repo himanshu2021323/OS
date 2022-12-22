@@ -1,48 +1,58 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <unistd.h>
 #include <sys/socket.h>
-#include <stdlib.h>
 #include <netinet/in.h>
+#include <unistd.h>
 #include "helpers.c"
 
 int main()
 {
-    int fileDescriptor;
-    char *randomStrings[50];
+    int fd;
+    char *random_Str[50];
+    char * myfifo = "/tmp/myfifo";
+
     for(int i = 0; i<50; i++){
-        randomStrings[i] = generateRandomString(5);
+        random_Str[i] = getRS(5);
         if(i <= 9){
-            sprintf(randomStrings[i],"%s 0%d\n",randomStrings[i],i);
-        }else{ 
-            sprintf(randomStrings[i],"%s %d\n",randomStrings[i],i);
+            sprintf(random_Str[i],"%s 0%d\n",random_Str[i],i);
         }
-        randomStrings[i][8]= '\n';
-        randomStrings[i][9]= '\0';
+        else{ 
+            sprintf(random_Str[i],"%s %d\n",random_Str[i],i);
+        }
+
+        random_Str[i][8]= '\n';
+        random_Str[i][9]= '\0';
     }
-    mkfifo("/tmp/myfifo", 0666);
-    char str1[1000];
-    char **MatrixStr = malloc(10000);
-    int iteratorIndex = 0;
-    while (iteratorIndex < 50)
+
+    mkfifo(myfifo, 0666);
+
+    char s1[1000];
+    char **s2 = malloc(10000);
+
+    int index = 0;
+    while (index < 50)
     {
-        MatrixStr = randomStrings;
-        fileDescriptor = open("/tmp/myfifo", O_WRONLY);
-        write(fileDescriptor, *(MatrixStr+iteratorIndex), strlen(*MatrixStr));
-        write(fileDescriptor, *(MatrixStr+iteratorIndex+1), strlen(*MatrixStr));
-        write(fileDescriptor, *(MatrixStr+iteratorIndex+2), strlen(*MatrixStr));
-        write(fileDescriptor, *(MatrixStr+iteratorIndex+3), strlen(*MatrixStr));
-        write(fileDescriptor, *(MatrixStr+iteratorIndex+4), strlen(*MatrixStr));
-        close(fileDescriptor);
-        fileDescriptor = open("/tmp/myfifo", O_RDONLY);
-        read(fileDescriptor, str1, sizeof(str1));
-        iteratorIndex = atoi(str1)+1;
-        printf("Sent by Client: %s\n", str1);
-        close(fileDescriptor);
+        s2 = random_Str;
+        fd = open(myfifo, O_WRONLY);
+
+        for(int a = 0; a < 5; a++){
+            write(fd, *(s2+index+a), strlen(*s2));
+        }
+        
+        close(fd);
+
+        fd = open(myfifo, O_RDONLY);
+
+        read(fd, s1, sizeof(s1));
+        index = atoi(s1)+1;
+        printf("Client sent by: %s\n", s1);
+
+        close(fd);
     }
-    unlink("/tmp/myfifo");
+    unlink(myfifo);
     exit(0);
 }
