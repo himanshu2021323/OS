@@ -1,8 +1,8 @@
 #include <stdio.h>
-#include <sys/ipc.h>
-#include <sys/msg.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
 #include "helpers.c"
 
 struct infoPacket {
@@ -12,40 +12,42 @@ struct infoPacket {
   
 int main()
 {   
-    size_t packetSize = sizeof(struct infoPacket);
-    struct infoPacket *firstMessage = malloc(packetSize);
-    struct infoPacket *secondMessage = malloc(packetSize);
-    int messageID1;
-    int messageID2;
+    size_t SizeOfpacket = sizeof(struct infoPacket);
+    struct infoPacket *firstMesg = malloc(SizeOfpacket);
+    struct infoPacket *secondMesg = malloc(SizeOfpacket);
+
+    int mID1;
+    int mID2;
     size_t string_size = 30;
-    char *randomStringArray[50];
-    populateArraywithRandomStrings(randomStringArray, 50);
+    char *rSarray[50];
+    arrayRS(rSarray, 50);
     
-    int indexTracker = 0;
+    int index = 0;
     int x = 1;
-    while(indexTracker<50){
+    while(index<50){
 
-    messageID1 = msgget(ftok("progfile1", 65), 0666 | IPC_CREAT);
-    messageID2 = msgget(ftok("progfile2", 75), 0777 | IPC_CREAT);
+    mID1 = msgget(ftok("progfile1", 65), 0666 | IPC_CREAT);
+    mID2 = msgget(ftok("progfile2", 75), 0777 | IPC_CREAT);
 
-    firstMessage->mesg_type = 1;
-    strcat(firstMessage->mesg_text,randomStringArray[indexTracker]);
-    strcat(firstMessage->mesg_text,randomStringArray[indexTracker+1]);
-    strcat(firstMessage->mesg_text,randomStringArray[indexTracker+2]);
-    strcat(firstMessage->mesg_text,randomStringArray[indexTracker+3]);
-    strcat(firstMessage->mesg_text,randomStringArray[indexTracker+4]);
-    msgsnd(messageID1, firstMessage, packetSize, 0);
-    firstMessage->mesg_text[0] = '\0';
-    msgrcv(messageID2, secondMessage, packetSize, 2, 0);
-    indexTracker = atoi(secondMessage->mesg_text) + 1;
-    printf("Sent random strings batch %d \n",x);
-    printf("Client has Sent : %d \n", atoi(secondMessage->mesg_text)+1);
-    x=x+1;
-    if (indexTracker == 50){
-        printf("Exiting");
+    firstMesg->mesg_type = 1;
+
+    for(int a = 0; a < 5; a++){
+        strcat(firstMesg->mesg_text,rSarray[index + a]);
+    }
+    msgsnd(mID1, firstMesg, SizeOfpacket, 0);
+    firstMesg->mesg_text[0] = '\0';
+
+    msgrcv(mID2, secondMesg, SizeOfpacket, 2, 0);
+    index = atoi(secondMesg->mesg_text) + 1;
+
+    printf("Random strings sent %d \n",x);
+    printf("Client has Sent : %d \n", atoi(secondMesg->mesg_text)+1);
+    x++;
+    if (index == 50){
+        printf("Exit");
     }
     }
-    msgctl(messageID2, IPC_RMID, NULL);
+    msgctl(mID2, IPC_RMID, NULL);
     return 0;
     
 }
