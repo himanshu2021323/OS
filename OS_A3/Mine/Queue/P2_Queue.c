@@ -1,9 +1,10 @@
 #include <stdio.h>
-#include <sys/ipc.h>
-#include <sys/msg.h>
 #include<stdlib.h>
 #include<string.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
 #include "helpers.c"
+
 struct infoPacket {
     long mesg_type;
     char mesg_text[2000];
@@ -11,26 +12,28 @@ struct infoPacket {
   
 int main()
 {
-    int firstMessageID;
-    size_t packetSize = sizeof(struct infoPacket);
-    struct infoPacket *message1 = malloc(packetSize);
-    struct infoPacket *message2 = malloc(packetSize);
-    int indexTracker=0;
-    while(indexTracker<49){
-        firstMessageID = msgget(ftok("progfile1", 65), 0666 | IPC_CREAT);
-        
-        msgrcv(msgget(ftok("progfile1", 65), 0666 | IPC_CREAT), message1, packetSize, 1, 0);
-        printf("Message Text Recieved - %s", message1->mesg_text);
+    int firstmID;
+    size_t sizeOfPacket = sizeof(struct infoPacket);
+    struct infoPacket *msg1 = malloc(sizeOfPacket);
+    struct infoPacket *msg2 = malloc(sizeOfPacket);
 
-        message2->mesg_type = 2;
-        indexTracker = atoi(&message1->mesg_text[strlen(message1->mesg_text)-3]);
-        printf("Value Sent to Server: %d\n",indexTracker+1);
-        sprintf(message2->mesg_text,"%d",indexTracker);
-        if(msgsnd(msgget(ftok("progfile2",75), 0777 | IPC_CREAT), message2, packetSize, 0)!=0){
-            throwPerrorandExit("Error While Sending");
+    int index=0;
+    while(index<49){
+        firstmID = msgget(ftok("progfile1", 65), 0666 | IPC_CREAT);
+        
+        msgrcv(msgget(ftok("progfile1", 65), 0666 | IPC_CREAT), msg1, sizeOfPacket, 1, 0);
+        printf("Message Recieved - %s", msg1->mesg_text);
+
+        msg2->mesg_type = 2;
+        index = atoi(&msg1->mesg_text[strlen(msg1->mesg_text)-3]);
+        printf("Value Sent to Server: %d\n",index+1);
+        sprintf(msg2->mesg_text,"%d",index);
+
+        if(msgsnd(msgget(ftok("progfile2",75), 0777 | IPC_CREAT), msg2, sizeOfPacket, 0)!=0){
+            erroeandexit("Error While Sending");
         }
-        message2->mesg_text[0] = '\0';
+        msg2->mesg_text[0] = '\0';
     }
-    msgctl(firstMessageID, IPC_RMID, NULL);  
+    msgctl(firstmID, IPC_RMID, NULL);  
     return 0;
 }
