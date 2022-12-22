@@ -6,16 +6,16 @@
 #include <unistd.h>
 #include "helpers.c"
 
-#define ADDRESS     "Sockets"  /* addr to connect */
+#define ADDRESS     "Sockets"
 
 int main()
 {
-    FILE *filePointer;
-    register int communicationEndpoint, sizeofAddressofHost;
+    FILE *fp;
+    register int endPoint, sizeofAddressofHost;
     struct sockaddr_un addressofHost;
 
-    if ((communicationEndpoint = socket(AF_UNIX, SOCK_STREAM, 0)) < 0) {
-        throwPerrorandExit("Error in Client's Socket");
+    if ((endPoint = socket(AF_UNIX, SOCK_STREAM, 0)) < 0) {
+        errorandexit("Error in Client's Socket");
     }
 
     addressofHost.sun_family = AF_UNIX;
@@ -23,36 +23,39 @@ int main()
 
     sizeofAddressofHost = sizeof(addressofHost.sun_family) + strlen(addressofHost.sun_path);
 
-    if (connect(communicationEndpoint, (struct sockaddr *)&addressofHost, sizeofAddressofHost) < 0) {
-        throwPerrorandExit("Error While Trying to Connect to Client");
+    if (connect(endPoint, (struct sockaddr *)&addressofHost, sizeofAddressofHost) < 0) {
+        errorandexit("Error While Trying to Connect to Client");
     }
 
-    filePointer = readfromSocket(communicationEndpoint);
+    fp = socketRead(endPoint);
+    int num = 0;
 
-    int numrec = 0;
-    while(numrec<50){
-        char ans[1000];
-        int k = 0;
-        char tempChar;
+    while(num<50){
+        char arr[1000];
+        int j = 0;
+        char temp;
+
         for (int i = 0; i < 5; i++) {
-            while ((tempChar = fgetc(filePointer)) != EOF) {
-                putchar(tempChar);
-                if (tempChar == '\n')
+            while ((temp = fgetc(fp)) != EOF) {
+                putchar(temp);
+                if (temp == '\n')
                     break;
-                ans[k] = tempChar;
-                k++;
+                arr[j] = temp;
+                j++;
             }
         }
-        numrec = (ans[k-2] -'0')*10  + (ans[k-1] -'0');
-        printf("Number Received on Client- %d\n",numrec);
-        numrec = numrec + 1;
+        num = (arr[j-2] -'0')*10  + (arr[j-1] -'0');
+        printf("Number Received- %d\n",num);
+
+        num += 1;
+
         char StringSentBack[200];
-        sprintf(StringSentBack, "%d", numrec);
+        sprintf(StringSentBack, "%d", num);
+
         printf("String - %s \n",StringSentBack);
-        send(communicationEndpoint, StringSentBack, 2, 0);
+        send(endPoint, StringSentBack, 2, 0);
     }
 
-    endConnection(communicationEndpoint);
-
+    end(endPoint);
     exit(0);
 }
