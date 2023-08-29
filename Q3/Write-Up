@@ -1,0 +1,5 @@
+First we make directory Result and a text file output.txt in it. It will overwrite output.txt with a blank text file, if it already exists.
+Then we read each line of input.txt in variable line, and split the line in x, y and operation,
+and use case statement to identify the operation, and store the answer of each line in result variable,
+it will also report any unknown operation. Then we will append the value of result variable in output.txt.
+It will also print a confirmation message at the end.

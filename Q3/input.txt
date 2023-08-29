@@ -1,0 +1,4 @@
+2 178 product
+3 4 compare
+3 8 compare
+5 9 xor
